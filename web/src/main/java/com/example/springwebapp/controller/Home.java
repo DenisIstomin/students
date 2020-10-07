@@ -1,10 +1,13 @@
 package com.example.springwebapp.controller;
 
+import com.example.springwebapp.model.Product;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Denis on 2/20/2016.
@@ -14,15 +17,19 @@ import javax.servlet.http.HttpSession;
 public class Home {
 
     @RequestMapping("/")
-    public String home () {
+    public String home() {
         return "index";
     }
 
     @RequestMapping("/home-with-session")
-    public ModelAndView homeWithSession (HttpSession session) {
-        ModelAndView mav = new ModelAndView("index");
+    public String homeWithSession(Model model, HttpSession session) {
         String sid = session.getId();
-        mav.addObject("sid", sid);
-        return mav;
+        model.addAttribute("sid", sid);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(new Product("Old product", 1, new Date()));
+        products.add(new Product("New product", 2, new Date()));
+        model.addAttribute("products", products);
+        return "index";
     }
 }

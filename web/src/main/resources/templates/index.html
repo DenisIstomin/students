@@ -7,5 +7,22 @@
 <body>
 <h1>Hello Spring Leaf!</h1>
 <h2 th:text="${sid}"></h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Available from</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.availableFrom}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
