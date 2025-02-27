@@ -16,6 +16,12 @@
 Настройка окружения:
 https://code.visualstudio.com/docs/cpp/config-wsl
 
+# Примеры кода
+В каждой из лабораторных работ приведен пример кода, комментария вида
+~~~c
+// ToDo: что-то
+~~~
+означают, что некоторый код отсутствует и его необходимо написать.
 # Лабораторные работы
 ## 1. SSE
 (вычисление квадратного корня или суммы массивов, анализ сгенерированного ассемблера)
@@ -24,10 +30,122 @@ https://felix.abecassis.me/2011/09/cpp-getting-started-with-sse/
 
 http://www.cs.fsu.edu/~baker/opsys/notes/assembly.html
 
-Сравнение с последовательным кодом
+Сравнение с последовательным кодом.
+~~~c
+void sse(float a[], float b[], float c[]) {
+  asm volatile (
+                "movups %[a], %%xmm0\n"
+                "movups %[b], %%xmm1\n"
+                "mulps %%xmm1, %%xmm0\n"
+                "movups %%xmm0, %[c]\n"
+                :
+                : [a]"m"(*a), [b]"m"(*b), [c]"m"(*c)
+                : "%xmm0", "%xmm1");
+  for (int i = 0; i < 4; i++) {
+    printf("%f ", c[i]);
+  }
+  printf("\n");
+}
+
+int main(int argc, char** argv) {
+  // ToDo: инициализация массивов `a` и `b`
+
+  for (int i = 0; i < iterations_num; i++) {
+    sse(a, b, c);
+  }
+
+  return 0;
+}
+~~~
 
 ## 2. Pthreads (сумма элементов массива, сравнение производительности с последовательным кодом)
+~~~c
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <math.h>
+
+int counter = 0;
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
+void *heavy_task(void *i) {
+  int thread_num = *((int*) i);
+
+  // Пример критической секции с мьютексом
+  printf("\tThread #%d started\n", thread_num);
+  pthread_mutex_lock(&mutex);
+  printf("\t\tThread #%d acquired mutex\n", thread_num);
+  counter++;
+  printf("\t\t\tThread #%d, counter: %d\n", thread_num, counter);
+  printf("\t\tThread #%d released mutex\n", thread_num);
+  pthread_mutex_unlock(&mutex);
+
+  // Long-running task
+  for (int i = 0; i < 1e8; i++) {
+    sqrt(i);
+  }
+
+  printf("\tThread #%d finished\n", thread_num);
+  free(i);
+}
+
+void pthreads(int threads_num) {
+
+  pthread_t threads[threads_num];
+  int status;
+
+  for (int i = 0; i < threads_num; i++) {
+
+    printf("MAIN: starting thread %d\n", i);
+
+    int *thread_num = (int*) malloc(sizeof(int));
+    *thread_num = i;
+
+    status = pthread_create(&threads[i], NULL, heavy_task, thread_num);
+
+    if (status != 0) {
+      fprintf(stderr, "pthread_create failed, error code %d\n", status);
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  for (int i = 0; i < threads_num; i++) {
+    pthread_join(threads[i], NULL);
+  }
+}
+
+int main(int argc, char** argv) {
+  int threads_num = atoi(argv[1]);
+  pthreads(threads_num);
+  pthread_mutex_destroy(&mutex);
+  return 0;
+}
+
+~~~
 ## 3. OpenMP (сумма элементов массива, сравнение производительности с Pthreads, последовательным кодом)
+~~~c
+void *heavy_task() {
+  int limit = 1e8;
+  for (int i = 0; i < limit; i++) {
+    sqrt(i);
+  }
+}
+
+void openmp(int thread_num) {
+  // omp_set_dynamic(0);
+  // omp_set_num_threads(thread_num);
+  // printf("OpenMP threads: %d\n", omp_get_num_threads());
+  #pragma omp parallel for num_threads(thread_num)
+  for (int i = 0; i < thread_num; i++) {
+    heavy_task();
+  }
+}
+
+// ToDo: дописать функцию main()
+~~~
+
 ## 4. Java Threads (тестирование работы HashMap, Hashtable, synchronized HashMap, ConcurrentHashMap в многопоточном режиме)
 ## 5. Java util concurrent (создание собственного считающего семафора)
 ## 6. Java IPC (Обмен сообщениями через socket)
