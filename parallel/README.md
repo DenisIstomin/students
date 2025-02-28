@@ -22,6 +22,13 @@ https://code.visualstudio.com/docs/cpp/config-wsl
 // ToDo: что-то
 ~~~
 означают, что некоторый код отсутствует и его необходимо написать.
+# Как правильно мерить вермя
+ToDo: clock() меряет процессорное время, а не глобальное (wall-clock time).
+
+Во 2й и 3й лаб работах можно использовать CLOCK_REALTIME или CLOCK_MONOTONIC: https://www.baeldung.com/linux/timekeeping-clocks.
+
+А также, можно мерять время работы программы вне программы при помощи команды `time`: https://en.wikipedia.org/wiki/Time_(Unix)
+
 # Лабораторные работы
 ## 1. SSE
 Необходимо:
@@ -157,9 +164,9 @@ void openmp(int thread_num) {
 
 // ToDo: дописать функцию main()
 ~~~
-
 ## 4. Java Threads (тестирование работы HashMap, Hashtable, synchronized HashMap, ConcurrentHashMap в многопоточном режиме)
 ## 5. Java util concurrent (создание собственного считающего семафора)
+
 ## 6. Java IPC (Обмен сообщениями через socket)
 ## 7. Java IPC (Использование библиотеки MappedBusWriter: запустить example)
 ## 8*. MPI (посчитать число pi)
