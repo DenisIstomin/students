@@ -373,7 +373,9 @@ public class MySemaphore extends Semaphore {
 
 https://www.geeksforgeeks.org/simple-chat-application-using-sockets-in-java/
 
-## 7. Java IPC (Использование библиотеки MappedBusWriter: запустить example)
+## 7. Java IPC (Использование библиотеки MappedBus: запустить example)
+https://github.com/caplogic/Mappedbus/tree/master/src/sample/io/mappedbus/sample/object
+
 ## 8*. MPI (посчитать число pi)
 Обзорная работа, нужно изучить код:
 ~~~c
