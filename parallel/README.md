@@ -22,7 +22,7 @@ https://code.visualstudio.com/docs/cpp/config-wsl
 // ToDo: что-то
 ~~~
 означают, что некоторый код отсутствует и его необходимо написать.
-# Как правильно мерить вермя
+# Как правильно измерить время (первые 3 лаб работы на C)
 ToDo: clock() меряет процессорное время, а не глобальное (wall-clock time).
 
 Во 2й и 3й лаб работах можно использовать CLOCK_REALTIME или CLOCK_MONOTONIC: https://www.baeldung.com/linux/timekeeping-clocks.
